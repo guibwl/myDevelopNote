@@ -308,9 +308,35 @@ ReactDOM.render(
 
 # 引入蚂蚁金服组件
 
-### 高清插件
+## 搭配 redux 注意事项
+
+
+就目前使用部分蚂蚁组件得知，组件并非在引入的地方，触发render进行渲染，而是跳过路由在顶层入口渲染；
+
+* 如果你使用redux，并且组件通过 connect 方法，连接 store ，那么在使用蚂蚁组件时候，控制台会报错，告诉你找不到 store ,因为它在顶层渲染，跳过了我们注入 store 的地方，所以需要我们单独注入一次 store；
+* 以组件 Popup 为例 ：
+
+下面代码会报错  " Could not find "store" in either the context or props of "Connect(ComponentWithConnect)"  "
+
+~~~
+Popup.show(< ComponentWithConnect />, { maskClosable: false });
+~~~
+
+下面单独注入store，则代码不会报错：
+
+~~~
+Popup.show(
+	<Provider store={store}>
+		< ComponentWithConnect />
+	</Provider> , 
+{ maskClosable: false });
+~~~
+
+
+## 高清插件
 
 * 引入后以 宽度750px 的iPhone尺寸为基准设置css，然后除以100后使用rem单位；
+* 如使用px，则无法适配 plus 的3倍尺寸；
 * 以 宽度375px 屏幕尺寸为例设置字体或导航尺寸：
 
 ```
