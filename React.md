@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="highlight/styles/atom-one-light.css">
+<script src="highlight/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
 #react
 ------------------------------------------------
 
@@ -313,10 +320,10 @@ ReactDOM.render(
 
 就目前使用部分蚂蚁组件得知，组件并非在引入的地方，触发render进行渲染，而是跳过路由在顶层入口渲染；
 
-* 如果你使用redux，并且组件通过 connect 方法，连接 store ，那么在使用蚂蚁组件时候，控制台会报错，告诉你找不到 store ,因为它在顶层渲染，跳过了我们注入 store 的地方，所以需要我们单独注入一次 store；
-* 以组件 Popup 为例 ：
+* 如果你使用redux，并且组件通过 connect 方法，连接 store ，那么在使用蚂蚁渲染组件时候，控制台会报错，告诉你找不到 store ,<mark>因为它在顶层渲染，跳过了我们注入 store 的地方，所以需要我们单独注入一次 store；</mark>
+* 以组件 [Popup](https://mobile.ant.design/components/popup-cn/#components-popup-demo-basic) 为例 ：
 
-下面代码会报错  " Could not find "store" in either the context or props of "Connect(ComponentWithConnect)"  "
+下面代码会报  <q> <u> Could not find "store" in either the context or props of "Connect(ComponentWithConnect)" </u> </q>  错误:
 
 ~~~
 Popup.show(< ComponentWithConnect />, { maskClosable: false });
@@ -325,6 +332,9 @@ Popup.show(< ComponentWithConnect />, { maskClosable: false });
 下面单独注入store，则代码不会报错：
 
 ~~~
+import { Provider } from 'react-redux';
+import store from './youPath/store';
+
 Popup.show(
 	<Provider store={store}>
 		< ComponentWithConnect />

@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="highlight/styles/atom-one-light.css">
+<script src="highlight/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
 ### CSS实现－文本超出部分显示"…" 
 
 	overflow:hidden;  					
