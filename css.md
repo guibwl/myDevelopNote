@@ -2,6 +2,14 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+
+## 文字强制不换行
+
+```
+  white-space: pre-wrap;
+  word-wrap: break-word;
+```
+
 ## Background 添加 svg
 
 * 先看下svg绘制的圆环：
@@ -14,7 +22,7 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='100' height='120' viewBox='0 -2 59.75 60.25'><path fill='%23ccc' d='M29.691-.527c-15.648 0-28.333 12.685-28.333 28.333s12.685 28.333 28.333 28.333c15.648 0 28.333-12.685 28.333-28.333S45.339-.527 29.691-.527zm.184 53.75c-14.037 0-25.417-11.379-25.417-25.417S15.838 2.39 29.875 2.39s25.417 11.379 25.417 25.417-11.38 25.416-25.417 25.416z'/></svg>
 ```
 
-* 注意，css中，svg标签需要 encodeURIComponent 转码后方可使用，如下：
+* 注意，css中，svg标签需要 encodeURIComponent 转码后方可使用，如下(将宽高设为auto可以通过css控制其大小)：
 
 ```
 background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='59.75' height='60.25' viewBox='0 -2 59.75 60.25'%3E%3Cpath fill='%23ccc' d='M29.691-.527c-15.648 0-28.333 12.685-28.333 28.333s12.685 28.333 28.333 28.333c15.648 0 28.333-12.685 28.333-28.333S45.339-.527 29.691-.527zm.184 53.75c-14.037 0-25.417-11.379-25.417-25.417S15.838 2.39 29.875 2.39s25.417 11.379 25.417 25.417-11.38 25.416-25.417 25.416z'/%3E%3Cpath fill='none' stroke='%23108ee9' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M56.587 29.766c.369-7.438-1.658-14.699-6.393-19.552'/%3E%3C/svg%3E");

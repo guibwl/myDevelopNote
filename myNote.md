@@ -41,10 +41,17 @@
 	JSON.parse(localStorage.getItem('DATA_NAME'));
 
 ### 跨越问题解决
-打开终端输入下方代码，并重启浏览器 ( [查看](https://github.com/zhongxia245/blog/issues/28) )
+完全退出浏览器后,打开终端输入下方代码 ( [查看](https://github.com/zhongxia245/blog/issues/28) )
 
 ~~~
 open -a "Google Chrome" --args -disable-web-security -user-data-dir=
+~~~
+
+### MAC显示隐藏文件
+打开终端输入下方代码 
+
+~~~
+defaults write com.apple.finder AppleShowAllFiles -boolean true ; killall Finder
 ~~~
 
 ### Angular.js里的ng-class：
@@ -96,6 +103,12 @@ console.log(unique(arry))  // [1,2,3]
 ## js模块化书写规范
 
 *  AMD,CMD,CommonJS
+
+## 拨打电话
+
+~~~
+<a href="tel:13900000000">移动WEB页面JS一键拨打号码咨询功能</a>
+~~~
 
 ## html5调用 NATIVE 相册／摄像头／录音
 
@@ -193,8 +206,8 @@ function Getsex(psidno){
 //----------------------------------------------------------
 //    功能：检查身份证号码
 //  参数：
-//    idcard
-//    返回值：
+//    id 类型 string
+//    返回值：bool
 //----------------------------------------------------------
     window.VALIDATE = function () {
         var Errors = new Array("yes", "身份证号码位数不对!", "身份证号码出生日期超出范围或含有非法字符!", "身份证号码校验错误!", "身份证地区非法!");
