@@ -2,6 +2,11 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+## IOS click 默认闪烁去除
+
+```css
+-webkit-tap-highlight-color: rgba(0,0,0,0); 
+```
 
 ## 文字强制不换行
 

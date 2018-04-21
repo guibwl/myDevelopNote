@@ -2,6 +2,8 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+## js 学习笔记
+
 ### CSS实现－文本超出部分显示"…"
 
 	{
@@ -63,7 +65,7 @@ ng-class="{'className1':object,'className2':!object}"
 ~~~
 > **ng-class用法2:**
 >
-```
+``` jsx
 ng-class="myFunc()"
 $scope.myFunc = function() {
 		var color = 'className';
@@ -76,7 +78,7 @@ $scope.myFunc = function() {
 * `delete object["property"] ;`
 
 ## 数组去重方法：
-[数组去重十种方法](arrayDeduplication/JS数组去重的十种方法.htm)
+[数组去重十种方法](arrayDeduplication/JS数组去重的十种方法.html)
 >
 > **方法示例**
 >
@@ -99,7 +101,19 @@ $scope.myFunc = function() {
 console.log(unique(arry))  // [1,2,3]
 ~~~
 
+## html 入口判断引入 src 线上脚本
 
+```html
+
+    <script>
+      if (true) {
+      		document.writeln('<script src="https://www.abc.com/script.js"'+'>'+'<'+'/'+'script>');
+      } else {
+			document.writeln('<script src="https://www.abc.com/script.js"'+'>'+'<'+'/'+'script>');
+      }
+    </script>
+
+```
 ## js模块化书写规范
 
 *  AMD,CMD,CommonJS

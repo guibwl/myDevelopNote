@@ -20,23 +20,23 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 
 1、 首先，在 store 中进行配置：
 
->	~~~
+>	~~~ jsx
 >	 import Immutable from 'immutable' //引入 
 >	~~~
 >
 >如果使用 redux 提供的 logger ，则需要如下处理:
 >
->	~~~
+>	~~~ jsx
 >	const logger = createLogger({ 
 >      stateTransformer: (state) => {
 >			return state.toJS()
 >		}
 >	}) 
->	~~~
+>	~~~ jsx
 >
 >将 logger 放进 thunkMiddleware 中:
 >
->  ~~~
+>  ~~~ jsx
 >	const createStoreWithMiddleware = applyMiddleware(
 >  		thunkMiddleware,
 >    	logger
@@ -45,7 +45,7 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 > 
 > 用 immutable 数据格式替换 store , 并接入 REDUX_DEVTOOLS (可选)：
 > 
->  ~~~
+>  ~~~ jsx
 >  export default function configureStore(initialState) {
 >   const state = Immutable.Map() //使用 Immutable 数据格式
 >   const store = createStoreWithMiddleware(
@@ -61,7 +61,7 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 
 >	将 combineReducers 更改为从 'redux-immutable' 引入即可: 
 >
->  ~~~
+>  ~~~ jsx
 >	 import combineReducers from 'redux-immutable'
 >  ~~~
 >
@@ -75,13 +75,13 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 
 > 首先引入 immutable
 > 
-> ~~~
+> ~~~ jsx
 > import Immutable from 'immutable'
 > ~~~
 > 
 > 将 initialState 数据格式替换成 immutable 数据格式 :
 > 
-> ~~~
+> ~~~ jsx
 >  const initialState = Immutable.fromJS({
 >    key: velue
 >  })
@@ -89,7 +89,7 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 > 
 > 在 reducer 中使用 ` state.merge` 将数据合并到 state :
 > 
-> ~~~
+> ~~~ jsx
 > 	export const AppReducer = (state = initialState, action) => {
 >   switch (action.type) {
 >     case APP_ACTION_TYPE: 
@@ -105,7 +105,7 @@ immutable 像 redux 一样，使用前需要 `$ npm install xxx` 引入，目前
 
 >在 connect 中，只需在 mapStateToProps 获取 state 时做处理即可：
 >
-> ~~~
+> ~~~ jsx
 > function mapStateToProps(state) {
 >	const { AppReducer } = state.toObject(); // 将 state 浅转换数据格式
 >
