@@ -2,6 +2,54 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+## 动画制作
+
+以下案例使用 less 为例：
+
+```less
+      .effect(@keyframes) {
+        animation-duration: 0.2s;
+        animation: @keyframes .3s 1 linear;
+        animation-name: @keyframes;
+        animation-fill-mode: both;
+      }
+
+      &-fade-in {
+        .effect(@keyframes:amZoomIn);
+        animation-play-state: running;
+      }
+
+      &-fade-out {
+        .effect(@keyframes:amZoomOut);
+        animation-play-state: running;
+      }
+      
+      @keyframes amZoomIn {
+        0% {
+          opacity: 0;
+          visibility: hidden;
+        }
+
+        100% {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+      @keyframes amZoomOut {
+        0% {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        100% {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+```
+
+
 ## IOS click 默认闪烁去除
 
 ```css
@@ -11,8 +59,7 @@
 ## 文字强制不换行
 
 ```
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  white-space:nowrap;
 ```
 
 ## Background 添加 svg
