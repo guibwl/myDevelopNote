@@ -4,15 +4,6 @@
 
 ## js 学习笔记
 
-### CSS实现－文本超出部分显示"…"
-
-	{
-	 overflow:hidden;  					
-     text-overflow:ellipsis; 			
-     display:-webkit-box;  				 
-     -webkit-box-orient:vertical;
-     -webkit-line-clamp:2; 	
-    }
 
 ### JS实现－超出长度部分显示"…"
 
@@ -42,14 +33,14 @@
 	localStorage.setItem('DATA_NAME',JSON.stringify(item));
 	JSON.parse(localStorage.getItem('DATA_NAME'));
 
-### 跨越问题解决
+### MAC 跨越问题解决
 完全退出浏览器后,打开终端输入下方代码 ( [查看](https://github.com/zhongxia245/blog/issues/28) )
 
 ~~~
 open -a "Google Chrome" --args -disable-web-security -user-data-dir=
 ~~~
 
-### MAC显示隐藏文件
+### MAC 显示隐藏文件
 打开终端输入下方代码 
 
 ~~~

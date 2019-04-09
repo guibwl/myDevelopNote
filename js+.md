@@ -2,6 +2,9 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+ps aux | grep autocann 根据进程查找信息
+ps aux | head 当前运行进程列表
+
 ## js 进阶
 
 ### reduce()

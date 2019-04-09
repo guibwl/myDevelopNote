@@ -2,6 +2,17 @@
 <script src="highlight/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
+## CSS实现－文本超出部分显示"…"
+
+	{
+	 overflow:hidden;  					
+     text-overflow:ellipsis; 			
+     display:-webkit-box;  				 
+     -webkit-box-orient:vertical;
+     -webkit-line-clamp:2; 	
+    }
+
+
 ## 动画制作
 
 以下案例使用 less 为例：
