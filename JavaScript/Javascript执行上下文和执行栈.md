@@ -1,8 +1,35 @@
 # 理解 Javascript 执行上下文和执行栈
 
+> 本文暂不对 this 及 ES9 执行上下文进行讲解。
+
 ## 什么是执行上下文
 
 简而言之，执行上下文就是当前 JavaScript 代码被解析和执行时所在环境的抽象概念， JavaScript 中运行任何的代码都是在执行上下文中运行。
+
+## 执行上下文的版本
+
+执行上下文在 ES3 中，包含三个部分。
+
+- scope：作用域，也常常被叫做作用域链。
+- variable object：变量对象，用于存储变量的对象。
+- this value：this 值。
+
+在 ES5 中，我们改进了命名方式，把执行上下文最初的三个部分改为下面这个样子。
+
+- lexical environment：词法环境，当获取变量时使用。
+- variable environment：变量环境，当声明变量时使用。
+- this value：this 值。
+
+在 ES2018 中，执行上下文又变成了这个样子，this 值被归入 lexical environment，但是增加了不少内容。
+
+- lexical environment：词法环境，当获取变量或者 this 值时使用。
+- variable environment：变量环境，当声明变量时使用。
+- code evaluation state：用于恢复代码执行位置。
+- Function：执行的任务是函数时使用，表示正在被执行的函数。
+- ScriptOrModule：执行的任务是脚本或者模块时使用，表示正在被执行的代码。
+- Realm：使用的基础库和内置对象实例。
+- Generator：仅生成器上下文有这个属性，表示当前生成器。
+
 
 ## 执行上下文的类型
 
@@ -21,7 +48,111 @@
 
 在Chrome的devtool中，可以通过 source -> call stack 查看调用栈。
 
-## 执行上下文是如何被创建的
+
+## ES3 中的执行上下文
+
+#### 变量对象（variable object 简称 VO）
+
+每个执行环境文都有一个表示变量的对象——变量对象，全局执行环境的变量对象始终存在，而函数这样局部环境的变量，只会在函数执行的过程中存在，在函数被调用时且在具体的函数代码运行之前，JS 引擎会用当前函数的参数列表（arguments）初始化一个 “变量对象” 并将当前执行上下文与之关联 ，函数代码块中声明的 变量 和 函数 将作为属性添加到这个变量对象上。
+
+以下面这段代码为例：
+
+```js
+function foo(i){
+    var a = 'hello'
+    var b = function(){}
+    function c(){}
+}
+foo(22)
+```
+
+当我们调用foo(22)时，整个创建阶段伪代码如下：
+
+```js
+ECObj = {
+    scopChain： {...},
+    variableObject: {
+        arguments: {
+            0: 22,
+            length: 1
+        },
+        i: 22,
+        c: pointer to function c(){},
+        a: undefined,
+        b: undefined
+    },
+    this: { ... }
+}
+```
+上面示例，`variableObject` 属性就表示变量对象，里面属性的顺序与整个创建顺序一一对应。
+> 函数的形参 -> 函数声明 -> 变量声明
+> 存在相同的属性时，后创建函数声明类型的属性会遮蔽先创建的任何类型属性。
+
+* **函数的形参**（当进入函数执行上下文时）：变量对象的一个属性，其属性名就是形参的名字，其值就是实参的值；对于没有传递的参数，其值为undefined
+
+* **函数声明**（FunctionDeclaration, FD）：变量对象的一个属性，其属性名和值都是函数对象创建出来的；如果变量对象已经包含了相同名字的属性，则替换它的值
+
+* **变量声明**（var，VariableDeclaration）：变量对象的一个属性，其属性名即为变量名，其值为undefined;如果变量名和已经声明的函数名或者函数的参数名相同，则不会影响已经存在的属性。
+
+当函数内代码执行后，VO状态会进行变更，变更后我们称之为活动对象（activation object 简称 AO），上面的VO示例在转变为AO后的伪代码如下：
+
+```js
+ECObj = {
+    scopeChain: { ... },
+    variableObject: {
+        arguments: {
+            0: 22,
+            length: 1
+        },
+        i: 22,
+        c: pointer to function c(),
+        a: 'hello',
+        b: pointer to function privateB()
+    },
+    this: { ... }
+}
+```
+
+到这里就可以解释一些变量提升的问题了，我们来看一些具体示例：
+
+```js
+function foo1(a){
+    console.log(a) // function a(){}
+    function a(){}
+    var a
+    console.log(a) // function a(){}
+    var a = 10
+    console.log(a) // 10
+}
+foo1(20)
+```
+这个例子中，第一个`console.log(a)`是函数内第一句代码，所以这里我们获取到的值是 VO，行参第一个初始化，函数声明紧接着创建了（这也就是变量提升的原理），所以我们这里获取到的 a 是 `function a(){}`;
+第二个 `console.log(a)` 前面有个 `var a`，但是由于没有赋值所以被引擎忽略，第三个有赋值，则打印为 10；
+
+```js
+function foo2(a){
+    var a
+    console.log(a) // 20
+    a = 10
+    console.log(a) // 10
+}
+foo2(20)
+```
+这个例子第一个打印前有 `var a`，但是由于没有赋值，所以取VO中初始化的参数值。第二个赋值后，则打印为 10；
+
+#### 作用域链（scope chain）
+
+**作用域** 规定了如何查找变量，也就是确定当前执行代码对变量的访问权限。当查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找，一直找到全局上下文的变量对象，也就是全局对象。这样由多个执行上下文的变量对象构成的链表就叫做 **作用域链**。
+
+函数的作用域在函数创建时就已经确定了。当函数创建时，会有一个名为 `[[scope]]` 的内部属性保存所有父变量对象到其中。当函数执行时，会创建一个执行环境，然后通过复制函数的 `[[scope]]`  属性中的对象构建起执行环境的作用域链，然后，变量对象 VO 被激活生成 AO 并添加到作用域链的前端，完整作用域链创建完成：
+
+```js
+Scope = [AO].concat([[Scope]]);
+```
+
+## ES5 中的执行上下文
+
+#### 执行上下文是如何被创建的
 
 执行上下文分两个阶段创建：1）创建阶段； 2）执行阶段
 
@@ -109,7 +240,7 @@ FunctionExectionContext = {
 
 如上所述，变量环境也是一个词法环境，因此它具有上面定义的词法环境的所有属性。
 
-在 ES6 中，LexicalEnvironment 组件和 VariableEnvironment 组件的区别在于前者用于存储函数声明和变量（ let 和 const ）绑定，而后者仅用于存储变量（ var ）绑定。
+LexicalEnvironment 组件和 VariableEnvironment 组件的区别在于前者用于存储函数声明和变量（ let 和 const ）绑定，而后者仅用于存储变量（ var ）绑定。
 
 让我们结合一些代码示例来理解上述概念：
 
@@ -189,7 +320,7 @@ FunctionExectionContext = {
 
 
 #### 执行阶段
-这是整篇文章中最简单的部分。在此阶段，完成对所有变量的分配，最后执行代码。
+在此阶段，完成对所有变量的分配，最后执行代码。
 
 注： 在执行阶段，如果 Javascript 引擎在源代码中声明的实际位置找不到 let 变量的值，那么将为其分配 undefined 值。
 
@@ -201,7 +332,12 @@ FunctionExectionContext = {
 - 函数执行上下文
 - Eval 函数执行上下文
 
-每种类型在其创建阶段，均发生了三件事情：
+ES3 中，执行上下文主要分为：
+- scope：作用域，也常常被叫做作用域链。
+- variable object：变量对象，用于存储变量的对象，执行代码后转为AO，这里也是导致变量提升的关键。
+- this value：this 值。
+
+ES5 开始，每种类型在其创建阶段，均发生了三件事情：
 - 确定 this 的值，也被称为 This Binding。
 - LexicalEnvironment（词法环境） 组件被创建(对应const、let、函数声明的标识符)。
 - VariableEnvironment（变量环境） 组件被创建(对应var声明的标识符)。
