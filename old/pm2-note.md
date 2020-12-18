@@ -144,7 +144,7 @@ $ pm2 ecosystem
       },
       env: { //开发环境
          NODE_ENV: 'development',
-         REMOTE_ADDR: 'https://test1-city.pingan.com.cn'
+         REMOTE_ADDR: 'https://test1-city.**.com.cn'
       },
       env_test: { //测试环境
         NODE_ENV: 'test',
